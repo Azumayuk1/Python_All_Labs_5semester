@@ -444,7 +444,7 @@ def Lab6():
                 if guests_with_searched_surname == 0:
                     print("Guest is not found.")
                 elif guests_with_searched_surname == 1:
-                    if guest_is_in_single_room == True:
+                    if guest_is_in_single_room:
                         print(f"Guest is found: room number |{saved_guest_room_number}|")
                     else:
                         print(f"Guest is found: room number |{saved_guest_room_number + len(single_bedrooms_list)}|")
@@ -466,7 +466,7 @@ def Lab6():
                             print(f"Guest is found: room number |{room_index + len(single_bedrooms_list)}|")
                             guest_with_initials_was_found = True
 
-                    if guest_with_initials_was_found == False:
+                    if not guest_with_initials_was_found:
                         print("Guest with such surname and initials wasn't found.")
 
             # Change guest's info
@@ -477,7 +477,7 @@ def Lab6():
                 except:
                     print("Incorrect input: Not a number (must be integer).")
                     return
-                if input_room_number < (len(single_bedrooms_list) - 1) and input_room_number >= 0:
+                if (len(single_bedrooms_list) - 1) > input_room_number >= 0:
                     single_bedrooms_list[input_room_number].change_guest_name_input()
                 elif input_room_number > len(single_bedrooms_list) + len(double_bedrooms_list) - 1:
                     print("There is no room with such number.")
@@ -489,12 +489,120 @@ def Lab6():
             # Print all guests in the hotel
             case "3":
                 print_all_guests(single_bedrooms_list, double_bedrooms_list)
+
             case default:
                 print("Unknown choice - choose between 1, 2, 3.")
 
 
+# Lab 10
+class CVehicle:
+    def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
+                 year_of_prod: int = None, status: str = None):
+        self.status = status or "ON HOLD"
+        self.coord_x = coord_x or 0
+        self.coord_y = coord_y or 0
+        self.vehicle_price = vehicle_price or 0
+        self.max_speed = max_speed or 100
+        self.year_of_prod = year_of_prod or 1900
+
+    def __str__(self):
+        return f"Current coordinates: |X {self.coord_x}| |Y {self.coord_y}|\n" \
+               f"Current vehicle status: |{self.status}|\n" \
+               f"Year of production: {self.year_of_prod}\n" \
+               f"Max. vehicle speed: {self.max_speed}\n" \
+               f"Vehicle price: {self.vehicle_price}"
+
+    def change_coordinates(self, new_x, new_y):
+        self.coord_x = new_x
+        self.coord_y = new_y
+
+    def change_status(self, new_status):
+        self.status = new_status
+
+    def change_vehicle_price(self, new_price):
+        self.vehicle_price = new_price
+
+    def change_max_speed(self, new_max_speed):
+        self.max_speed = new_max_speed
+
+    def change_year_of_production(self, new_year):
+        self.year_of_prod = new_year
+
+class CCar(CVehicle):
+    def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
+                 year_of_prod: int = None, status: str = None, manufacturer: str = None):
+        super().__init__(coord_x, coord_y, vehicle_price, max_speed, year_of_prod, status)
+        self.manufacturer = manufacturer or "Unknown"
+
+    def __str__(self):
+        return f"Vehicle type: [Car]\n" \
+               f"Current coordinates: |X {self.coord_x}| |Y {self.coord_y}|\n" \
+               f"Current vehicle status: |{self.status}|\n" \
+               f"Manufacturer: {self.manufacturer}\n" \
+               f"Year of production: {self.year_of_prod}\n" \
+               f"Max. vehicle speed: {self.max_speed}\n" \
+               f"Vehicle price: {self.vehicle_price}"
+
+    def change_manufacturer(self, new_manufac):
+        self.manufacturer = new_manufac
+
+class CPlane(CVehicle):
+    def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
+                 year_of_prod: int = None, status: str = None, height: int = None, max_passengers: int = None):
+        super().__init__(coord_x, coord_y, vehicle_price, max_speed, year_of_prod, status)
+        self.height = height or 0
+        self.max_passengers = max_passengers or 1
+
+    def __str__(self):
+        return f"Vehicle type: [Plane]\n" \
+               f"Current coordinates: |X {self.coord_x}| |Y {self.coord_y}| |Height {self.height} ft.\n" \
+               f"Current vehicle status: |{self.status}|\n" \
+               f"Year of production: {self.year_of_prod}\n" \
+               f"Max. vehicle speed: {self.max_speed}\n" \
+               f"Vehicle price: {self.vehicle_price}\n" \
+               f"Maximum passengers: {self.max_passengers}"
+
+    def change_height(self, new_height):
+        self.height = new_height
+
+    def change_max_passangers(self, new_max):
+        self.max_passengers = new_max
+
+
+class CShip(CVehicle):
+    def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
+                 year_of_prod: int = None, status: str = None, port: str = None, max_passengers: int = None):
+        super().__init__(coord_x, coord_y, vehicle_price, max_speed, year_of_prod, status)
+        self.port = port or "Unknown"
+        self.max_passengers = max_passengers or 1
+
+    def __str__(self):
+        return f"Vehicle type: [Ship]\n" \
+               f"Current coordinates: |X {self.coord_x}| |Y {self.coord_y}|\n" \
+               f"Current vehicle status: |{self.status}|\n" \
+               f"Year of production: {self.year_of_prod}\n" \
+               f"Max. vehicle speed: {self.max_speed}\n" \
+               f"Vehicle price: {self.vehicle_price}\n" \
+               f"Maximum passengers: {self.max_passengers}\n" \
+               f"Port: {self.port}"
+
+    def change_port(self, new_port):
+        self.port = new_port
+
+    def change_max_passengers(self, new_max):
+        self.max_passengers = new_max
+
+def Lab10():
+    test_vehicles_list = [CCar(5, 10, 1500, 170, 2007, "PARKED", "Volvo"),
+                     CPlane(100, 200, 250000, 400, 2013, "TAKING OFF", 450, 36),
+                     CShip(25789, 4450, 20000, 100, 1999, "IN SEA", "Vladivostok", 20)]
+    for vehicle in test_vehicles_list:
+        print(vehicle)
+        print("-" * 20)
+
+
 # Labs execution
-choice = int(input("Task number (1, 21, 22, 31, 32, 33, 4, 5, 6)?:"))
+choice = int(input("Task number (1, 21, 22, 31, 32, 33, 4, 5, 6, 10)?:"))
 
 match choice:
     case 1:
@@ -515,5 +623,7 @@ match choice:
         Lab5()
     case 6:
         Lab6()
+    case 10:
+        Lab10()
     case default:
         print("Unknown")
