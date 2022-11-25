@@ -528,6 +528,10 @@ class CVehicle:
     def change_year_of_production(self, new_year):
         self.year_of_prod = new_year
 
+    def unique_options(self):
+        print("This vehicle doesn't have unique characteristics.")
+
+
 class CCar(CVehicle):
     def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
                  year_of_prod: int = None, status: str = None, manufacturer: str = None):
@@ -545,6 +549,7 @@ class CCar(CVehicle):
 
     def change_manufacturer(self, new_manufac):
         self.manufacturer = new_manufac
+
 
 class CPlane(CVehicle):
     def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
@@ -565,8 +570,34 @@ class CPlane(CVehicle):
     def change_height(self, new_height):
         self.height = new_height
 
-    def change_max_passangers(self, new_max):
+    def change_max_passengers(self, new_max):
         self.max_passengers = new_max
+
+    def unique_options(self):
+        input_choice: str = input("What do you want to change: height (1) or max. passengers (2)? : ")
+        match input_choice:
+            case "1":
+                input_new_height: int
+                try:
+                    input_new_height = int(input("Enter new height:"))
+                    if input_new_height < 0:
+                        raise Exception("Height must be positive.")
+                except:
+                    print("Incorrect number.")
+                else:
+                    self.change_height(input_new_height)
+            case "2":
+                input_new_max: int
+                try:
+                    input_new_max = int(input("Enter new max. passengers capacity:"))
+                    if input_new_max < 0:
+                        raise Exception("Capacity must be positive.")
+                except:
+                    print("Incorrect number.")
+                else:
+                    self.change_max_passengers(input_new_max)
+            case default:
+                print("Unknown choice.")
 
 
 class CShip(CVehicle):
@@ -592,13 +623,100 @@ class CShip(CVehicle):
     def change_max_passengers(self, new_max):
         self.max_passengers = new_max
 
+    def unique_options(self):
+        input_choice: str = input("What do you want to change: port (1) or max. passengers (2)? : ")
+        match input_choice:
+            case "1":
+                input_new_port = input("Input new ship's port:")
+                self.change_port(input_new_port)
+            case "2":
+                input_new_max: int
+                try:
+                    input_new_max = int(input("Enter new max. passengers capacity:"))
+                    if input_new_max < 0:
+                        raise Exception("Capacity must be positive.")
+                except:
+                    print("Incorrect number.")
+                else:
+                    self.change_max_passengers(input_new_max)
+            case default:
+                print("Unknown choice.")
+
+
 def Lab10():
     test_vehicles_list = [CCar(5, 10, 1500, 170, 2007, "PARKED", "Volvo"),
-                     CPlane(100, 200, 250000, 400, 2013, "TAKING OFF", 450, 36),
-                     CShip(25789, 4450, 20000, 100, 1999, "IN SEA", "Vladivostok", 20)]
-    for vehicle in test_vehicles_list:
-        print(vehicle)
-        print("-" * 20)
+                          CPlane(100, 200, 250000, 400, 2013, "TAKING OFF", 450, 36),
+                          CShip(25789, 4450, 20000, 100, 1999, "IN SEA", "Vladivostok", 20)]
+
+    while True:
+        input_user_choice = input("Choose: print all vehicles in list (1), change vehicle's parameters (2) ?: ")
+        match input_user_choice:
+            # Print all vehicles in list
+            case "1":
+                for vehicle in test_vehicles_list:
+                    print(vehicle)
+                    print("-" * 20)
+            case "2":
+                input_vehicle_num: int
+                try:
+                    input_vehicle_num = int(input(f"Input vehicle ID (0, 1, ... {len(test_vehicles_list) - 1}): "))
+                    if input_vehicle_num < 0 or input_vehicle_num > len(test_vehicles_list) - 1:
+                        raise Exception("Number is out of bounds of vehicle list.")
+                except:
+                    print("Not a correct number: must be integer in range of vehicles list.")
+                    break
+
+                print("Choose parameter to change: coordinates (1), status (2), max. speed (3), vehicle price (4), "
+                      "or other parameters(5)? : ")
+                input_parameter_choice: int
+                try:
+                    input_parameter_choice = int(input())
+                except:
+                    print("Not a correct number: must be integer.")
+                    break
+
+                match input_parameter_choice:
+                    case 1:
+                        print("Input new coordinates (x, y) for vehicle: ")
+                        new_x = 0
+                        new_y = 0
+                        try:
+                            new_x = int(input())
+                            new_y = int(input())
+                        except:
+                            print("Incorrect coordinates.")
+                        else:
+                            test_vehicles_list[input_vehicle_num].change_coordinates(new_x, new_y)
+                    case 2:
+                        print("Input new status (string) for vehicle: ")
+                        new_status = "Unknown"
+                        test_vehicles_list[input_vehicle_num].change_status(new_status)
+                    case 3:
+                        print("Input new max. speed (int) for vehicle: ")
+                        new_max = 0
+                        try:
+                            new_max = int(input())
+                        except:
+                            print("Incorrect speed.")
+                        else:
+                            test_vehicles_list[input_vehicle_num].change_max_speed(new_max)
+                    case 4:
+                        print("Input new price (float) for vehicle: ")
+                        new_price = 0
+                        try:
+                            new_price = float(input())
+                        except:
+                            print("Incorrect price.")
+                        else:
+                            test_vehicles_list[input_vehicle_num].change_vehicle_price(new_price)
+                    case 5:
+                        test_vehicles_list[input_vehicle_num].unique_options()
+
+                    case default:
+                        print("Unknown parameter.")
+
+            case default:
+                print("Unknown command.")
 
 
 # Labs execution
