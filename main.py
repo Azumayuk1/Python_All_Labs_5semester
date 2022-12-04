@@ -2,6 +2,7 @@ import random
 from math import sqrt, cos, factorial, sin, pow, pi, exp
 
 import numpy as np
+import pickle
 
 
 def Lab1():
@@ -350,6 +351,9 @@ def print_all_guests(single_bedrooms_list, double_bedrooms_list):
 
 
 def Lab6():
+    # File for saving data
+    save_file_pickle_name = "hoteldata.pkl"
+
     # Creating lists of single- and double- rooms
     single_bedrooms_list = [SingleBedRoom() for i in range(5)]
     double_bedrooms_list = [DoubleBedRoom() for i in range(10)]
@@ -374,7 +378,8 @@ def Lab6():
         "Rudov",
         "Bozhenkov",
         "Gigachadov",
-
+        "Detrov",
+        "Dyatlov"
     ]
 
     random_initials_list = [
@@ -393,7 +398,15 @@ def Lab6():
         "K.K.",
         "D.A.",
         "S.A.",
-        "R.P."
+        "R.P.",
+        "G.G.",
+        "E.E.",
+        "T.T.",
+        "A.T.",
+        "V.V.",
+        "G.D.",
+        "E.V.",
+        "V.S."
     ]
 
     for room in single_bedrooms_list:
@@ -417,7 +430,8 @@ def Lab6():
 
     # Main program cycle with user choice
     while True:
-        input_user_options = input("Search guest (1), Change guest info (2), Print all guests (3)?:")
+        input_user_options = input("Search guest (1), Change guest info (2), Print all guests (3), Load hotel data "
+                                   "from file (4), Save hotel data into file (5)?:")
 
         match input_user_options:
             # Search guest by surname (and initials)
@@ -490,6 +504,20 @@ def Lab6():
             case "3":
                 print_all_guests(single_bedrooms_list, double_bedrooms_list)
 
+            case "4":
+                with open(save_file_pickle_name, "rb") as f:
+                    loaded_data = pickle.load(f)
+                single_bedrooms_list = loaded_data[0]
+                double_bedrooms_list = loaded_data[1]
+
+                print("Data LOADED from file.")
+            case "5":
+                save_object = (single_bedrooms_list, double_bedrooms_list)
+                with open(save_file_pickle_name, "wb") as f:
+                    pickle.dump(save_object, f)
+
+                print("Data successfully SAVED to file.")
+
             case default:
                 print("Unknown choice - choose between 1, 2, 3.")
 
@@ -520,12 +548,21 @@ class CVehicle:
         self.status = new_status
 
     def change_vehicle_price(self, new_price):
+        if new_price < 0:
+            print("Incorrect input.")
+            return
         self.vehicle_price = new_price
 
     def change_max_speed(self, new_max_speed):
+        if new_max_speed < 0:
+            print("Incorrect input.")
+            return
         self.max_speed = new_max_speed
 
     def change_year_of_production(self, new_year):
+        if new_year < 1900:
+            print("Incorrect input.")
+            return
         self.year_of_prod = new_year
 
     def unique_options(self):
@@ -550,6 +587,16 @@ class CCar(CVehicle):
     def change_manufacturer(self, new_manufac):
         self.manufacturer = new_manufac
 
+    def unique_options(self):
+        input_choice: str = input("In car, you can only change manufacturer name. Change? (y/n)")
+        match input_choice:
+            case "y":
+                input_new_name = input("Input new name:")
+                self.change_manufacturer(input_new_name)
+            case "n":
+                pass
+            case default:
+                print("Unknown command.")
 
 class CPlane(CVehicle):
     def __init__(self, coord_x: int = None, coord_y: int = None, vehicle_price: float = None, max_speed: int = None,
@@ -656,6 +703,7 @@ def Lab10():
                 for vehicle in test_vehicles_list:
                     print(vehicle)
                     print("-" * 20)
+            # Change vehicle parameters
             case "2":
                 input_vehicle_num: int
                 try:
@@ -664,7 +712,8 @@ def Lab10():
                         raise Exception("Number is out of bounds of vehicle list.")
                 except:
                     print("Not a correct number: must be integer in range of vehicles list.")
-                    break
+                    print("Chosen default ID: 0.")
+                    input_vehicle_num = 0
 
                 print("Choose parameter to change: coordinates (1), status (2), max. speed (3), vehicle price (4), "
                       "or other parameters(5)? : ")
@@ -676,6 +725,7 @@ def Lab10():
                     break
 
                 match input_parameter_choice:
+                    # Change vehicle coordinates
                     case 1:
                         print("Input new coordinates (x, y) for vehicle: ")
                         new_x = 0
@@ -687,10 +737,12 @@ def Lab10():
                             print("Incorrect coordinates.")
                         else:
                             test_vehicles_list[input_vehicle_num].change_coordinates(new_x, new_y)
+                    # Change vehicle status
                     case 2:
                         print("Input new status (string) for vehicle: ")
                         new_status = "Unknown"
                         test_vehicles_list[input_vehicle_num].change_status(new_status)
+                    # Change vehicle max speed
                     case 3:
                         print("Input new max. speed (int) for vehicle: ")
                         new_max = 0
@@ -700,6 +752,7 @@ def Lab10():
                             print("Incorrect speed.")
                         else:
                             test_vehicles_list[input_vehicle_num].change_max_speed(new_max)
+                    # Change vehicle price
                     case 4:
                         print("Input new price (float) for vehicle: ")
                         new_price = 0
@@ -709,6 +762,7 @@ def Lab10():
                             print("Incorrect price.")
                         else:
                             test_vehicles_list[input_vehicle_num].change_vehicle_price(new_price)
+                    # Bring up a menu of unique attributes of vehicle subclasses
                     case 5:
                         test_vehicles_list[input_vehicle_num].unique_options()
 
