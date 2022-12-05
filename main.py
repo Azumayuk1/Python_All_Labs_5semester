@@ -1,8 +1,10 @@
+import math
 import random
 from math import sqrt, cos, factorial, sin, pow, pi, exp
 
 import numpy as np
 import pickle
+import matplotlib.pyplot as plt
 
 
 def Lab1():
@@ -30,7 +32,7 @@ def Lab21(x, radius=2):
     second = -5 / 2 * radius
     third = -4 / 2 * radius
     fourth = 0 / 2 * radius
-    fifth = 3.14 / 2 * radius
+    fifth = math.pi / 2 * radius
     if (x > 5 / 2 * radius) or (x < -9 / 2 * radius):
         print("Ошибка! Выход за рамки диапазона")  # error
 
@@ -44,9 +46,9 @@ def Lab21(x, radius=2):
     elif (x >= fourth) and (x <= fifth):  # синус / sinus function
         y = sin(x)
     else:  # прямая / straight line y = kx + b 45deg
-        y = 2 * x / (5 - pi) + 2 - 10 / (5 - pi)
+        y = 2 * x / (5 - math.pi) + 2 - 10 / (5 - math.pi)
 
-    return y
+    return abs(y)
 
 
 # Lab 2.2
@@ -97,9 +99,13 @@ def Lab31():
 
     listY = [Lab21(i, radius) for i in listX]
 
+
     print(f'Значения X и Y c шагом dx = {dx}')
     for x, y in zip(listX, listY):
-        print(f'|\t{round(x, 2)} \t|\t {round(abs(y), 2)}\t|')
+        print(f'|\t{round(x, 2)} \t|\t {round(y, 2)}\t|')
+
+    plt.plot(listX, listY)
+    plt.show()
 
 
 # Lab 3.2
@@ -117,18 +123,25 @@ def Lab33():
     print("Enter dx:")
     dx = float(input())
     print(f'\t\t|\t\t X \t\t|\t\t L \t\t|\t\t TAILOR \t\t|\t\t N \t\t|\t\t')
+    listX = []
+    listTailor = []
 
     iFloat = float(xStart)
     while iFloat < float(xEnd):
         x = round(iFloat, 2)
-
+        listX.append(x)
         tailor = 0.0
         n = 0
         while abs((round(tailor, 8)) - round(exp(x), 8)) >= 0.01:
             tailor = tailor + round((x ** n / factorial(n)), 8)
+
             n = n + 1
         print(f'\t\t|\t\t{x}\t\t|\t\t{round(exp(x), 2)}\t\t|\t\t{round(tailor, 2)}\t\t|\t\t{n}\t\t|\t\t')
+        listTailor.append(tailor)
         iFloat = round((iFloat + dx), 2)
+
+    plt.plot(listX, listTailor)
+    plt.show()
 
 
 # Lab 4
